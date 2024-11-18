@@ -22,7 +22,7 @@ const BookingTraditional = ({ navigation, route }) => {
   const bookingDetails = route.params?.bookingDetails || {
     requestId: "672cb454b77f15a602eb2eb6",
     customerId: "670bdfc8b65786a7225f39a1",
-    moment_book: "2024-11-15T09:00:14.466+00:00",
+    moment_book: "2024-11-17T08:57:35.252+00:00",
     pickupLocation: {
       latitude: 15.860867278876274,
       longitude: 108.38900110617931,
@@ -34,29 +34,41 @@ const BookingTraditional = ({ navigation, route }) => {
       address: "Sân bay Quốc Tế",
     },
     customerName: "Nguyễn Văn A",
-    price: 100000, // Giá giả định
+    price: 100000,
     paymentMethod: "cash",
     serviceName: "Flexibike",
     customerId: "670bdfc8b65786a7225f39a1",
   };
-  // const bookingDetails = route.params?.bookingDetails;
+
+  const [request, setRequest] = useState({
+    _id: "defaultRequestId",
+    status: "confirmed",
+    details: {
+      pickupLocation: {
+        latitude: 15.860867278876274,
+        longitude: 108.38900110617931,
+        address: "Tạp hóa Tứ Vang",
+      },
+      destinationLocation: {
+        latitude: 15.978132,
+        longitude: 108.262098,
+        address: "Sân bay Quốc Tế",
+      },
+    },
+  });
+
   const momentBook = bookingDetails?.moment_book;
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
   const [routeData, setRouteData] = useState(null);
-  const [request, setRequest] = useState(null);
   const [customer, setCustomer] = useState(null);
   const [supportModalVisible, setSupportModalVisible] = useState(false);
 
   const pickupLocation = bookingDetails.pickupLocation;
   const destinationLocation = bookingDetails.destinationLocation;
   const mapRef = useRef(null);
-  const watchID = useRef(null);
-
   useEffect(() => {
     console.table("booking detail data: ", bookingDetails);
-    fetchCustomerDetails(bookingDetails.customerId);
-    fetchRequestDetail(momentBook);
   }, []);
 
   useEffect(() => {
@@ -104,12 +116,7 @@ const BookingTraditional = ({ navigation, route }) => {
       Alert.alert("Lỗi", "Không thể lấy thông tin yêu cầu");
     }
   };
-  useEffect(() => {
-    const initializeRequest = async () => {
-      await fetchRequestDetail(momentBook);
-    };
-    initializeRequest();
-  }, [momentBook]);
+
   useEffect(() => {
     if (currentLocation && request?.status) {
       if (request.status === "confirmed") {
